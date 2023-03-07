@@ -31,7 +31,9 @@ describe("Given a loginUser controller", () => {
       );
       req.body = mockUser;
 
-      User.findOne = jest.fn().mockResolvedValue(undefined);
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockResolvedValue(undefined),
+      }));
 
       await loginUser(req, res as Response, next);
 
@@ -41,13 +43,17 @@ describe("Given a loginUser controller", () => {
   describe("When it receives a request with a username `jaumecuadrada` and password `hola1234` and the user is registered in the database", () => {
     test("Then it should call its status method with 200 and its json method with a token", async () => {
       const expectedStatusCode = 200;
-      req.body = mockUser;
-      const expectedBodyResponse = { token: "asdfdsfg" };
+      const mockToken = "asdfdsfg";
 
-      User.findOne = jest.fn().mockResolvedValue({
-        ...mockUser,
-        _id: new mongoose.Types.ObjectId(),
-      });
+      const expectedBodyResponse = { token: mockToken };
+      req.body = mockUser;
+
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockResolvedValue({
+          ...mockUser,
+          _id: new mongoose.Types.ObjectId(),
+        }),
+      }));
 
       bcrypt.compare = jest.fn().mockResolvedValue(true);
       jwt.sign = jest.fn().mockReturnValue("asdfdsfg");
@@ -67,10 +73,12 @@ describe("Given a loginUser controller", () => {
       );
       req.body = mockUser;
 
-      User.findOne = jest.fn().mockResolvedValue({
-        ...mockUser,
-        _id: new mongoose.Types.ObjectId(),
-      });
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockResolvedValue({
+          ...mockUser,
+          _id: new mongoose.Types.ObjectId(),
+        }),
+      }));
 
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
