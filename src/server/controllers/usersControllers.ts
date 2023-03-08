@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { type NextFunction, type Request, type Response } from "express";
-import { CustomError } from "../../CustomError/CustomError";
-import User from "../../database/models/User";
+import { CustomError } from "../../CustomError/CustomError.js";
+import User from "../../database/models/User.js";
 import { type CustomJwtPayload, type UserCredentials } from "./types";
 
 export const loginUser = async (
@@ -16,7 +16,7 @@ export const loginUser = async (
 ) => {
   const { password, username } = req.body;
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).exec();
 
     if (!user) {
       const error = new CustomError("User not found", 401, "Wrong credentials");
