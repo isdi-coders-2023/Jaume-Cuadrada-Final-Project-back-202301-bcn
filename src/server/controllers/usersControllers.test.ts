@@ -7,11 +7,11 @@ import { loginUser } from "./usersControllers";
 import { CustomError } from "../../CustomError/CustomError";
 import mongoose from "mongoose";
 
-const res = {
+const res: Partial<Response> = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
-} as Partial<Response>;
-const req = {} as Request;
+};
+const req: Partial<Request> = {};
 const next = jest.fn() as NextFunction;
 
 beforeEach(() => jest.clearAllMocks());
@@ -35,7 +35,15 @@ describe("Given a loginUser controller", () => {
         exec: jest.fn().mockResolvedValue(undefined),
       }));
 
-      await loginUser(req, res as Response, next);
+      await loginUser(
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserCredentials
+        >,
+        res as Response,
+        next
+      );
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
@@ -58,7 +66,15 @@ describe("Given a loginUser controller", () => {
       bcrypt.compare = jest.fn().mockResolvedValue(true);
       jwt.sign = jest.fn().mockReturnValue("asdfdsfg");
 
-      await loginUser(req, res as Response, next);
+      await loginUser(
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserCredentials
+        >,
+        res as Response,
+        next
+      );
 
       expect(res.status).toHaveBeenCalledWith(expectedStatusCode);
       expect(res.json).toHaveBeenCalledWith(expectedBodyResponse);
@@ -82,7 +98,15 @@ describe("Given a loginUser controller", () => {
 
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
-      await loginUser(req, res as Response, next);
+      await loginUser(
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserCredentials
+        >,
+        res as Response,
+        next
+      );
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
@@ -95,7 +119,15 @@ describe("Given a loginUser controller", () => {
         exec: jest.fn().mockRejectedValue(errorDatabase),
       }));
 
-      await loginUser(req, res as Response, next);
+      await loginUser(
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserCredentials
+        >,
+        res as Response,
+        next
+      );
 
       expect(next).toHaveBeenCalledWith(errorDatabase);
     });

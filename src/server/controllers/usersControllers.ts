@@ -21,17 +21,13 @@ export const loginUser = async (
     if (!user) {
       const error = new CustomError("User not found", 401, "Wrong credentials");
 
-      next(error);
-
-      return;
+      throw error;
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
       const error = new CustomError("Wrong password", 401, "Wrong credentials");
 
-      next(error);
-
-      return;
+      throw error;
     }
 
     const jwtPayload: CustomJwtPayload = {

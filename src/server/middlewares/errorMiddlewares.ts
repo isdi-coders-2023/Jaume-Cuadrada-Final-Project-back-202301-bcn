@@ -4,7 +4,6 @@ import { type NextFunction, type Request, type Response } from "express";
 import { CustomError } from "../../CustomError/CustomError.js";
 
 const debug = createDebug("waxcrate-api:server:middlewares:errorMiddlewares");
-
 export const notFoundError = (
   req: Request,
   res: Response,
