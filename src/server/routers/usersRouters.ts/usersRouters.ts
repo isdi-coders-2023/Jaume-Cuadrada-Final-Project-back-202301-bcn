@@ -10,5 +10,4 @@ usersRouter.post(
   validate(loginUserSchema, {}, { abortEarly: false }),
   loginUser
 );
-
 export default usersRouter;
